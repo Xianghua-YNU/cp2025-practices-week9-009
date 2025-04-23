@@ -29,9 +29,11 @@ def koch_generator(u, level):
         p4 = end
         
         segment = np.array([p0, p1, p2, p3, p4])
-        points = np.concatenate((points, segment[:-1])) if points.size else segment[:-1]
+        points = np.concatenate((points, segment)) if points.size else segment
     
-    points = np.concatenate((points, [end]))
+    # 移除重复的端点（除了最后一个）
+    points = np.unique(points)
+    points = np.append(points, end)
     
     return koch_generator(points, level-1)
 
@@ -67,9 +69,11 @@ def minkowski_generator(u, level):
         p8 = end
         
         segment = np.array([p0, p1, p2, p3, p4, p5, p6, p7, p8])
-        points = np.concatenate((points, segment[:-1])) if points.size else segment[:-1]
+        points = np.concatenate((points, segment)) if points.size else segment
     
-    points = np.concatenate((points, [end]))
+    # 移除重复的端点（除了最后一个）
+    points = np.unique(points)
+    points = np.append(points, end)
     
     return minkowski_generator(points, level-1)
 
