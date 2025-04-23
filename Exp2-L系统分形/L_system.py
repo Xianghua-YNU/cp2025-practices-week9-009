@@ -38,26 +38,32 @@ def draw_l_system(instructions, angle, step, start_pos=(0,0), start_angle=0, sav
     stack = []
     fig, ax = plt.subplots()
     for cmd in commands:
-        if cmd in ('F', '0', '1'):# 向前绘制
+        # 向前绘制
+        if cmd in ('F', '0', '1'):
             nx = x + step * math.cos(math.radians(current_angle))
             ny = y + step * math.sin(math.radians(current_angle))
             ax.plot([x, nx], [y, ny], color='green' if tree_mode else 'blue', linewidth=1.2 if tree_mode else 1)
             x, y = nx, ny
-        elif cmd == 'f':# 向前移动但不绘制
+        # 向前移动但不绘制    
+        elif cmd == 'f':
             x += step * math.cos(math.radians(current_angle))
             y += step * math.sin(math.radians(current_angle))
-        elif cmd == '+':# 左转
+        # 左转
+        elif cmd == '+':
             current_angle += angle_deg
-        elif cmd == '-':# 右转
+        # 右转    
+        elif cmd == '-':
             current_angle -= angle_deg
-        elif cmd == '[':# 压栈(保存状态)
+        # 压栈(保存状态)    
+        elif cmd == '[':
             stack.append((x, y, current_angle))
             if tree_mode:
-                current_angle += angle_deg# 对于树规则，[表示左转
-        elif cmd == ']':# 出栈(恢复状态)
+                current_angle += angle_deg
+        # 出栈(恢复状态)        
+        elif cmd == ']':
             x, y, current_angle = stack.pop()
             if tree_mode:
-                current_angle -= angle_deg # 对于树规则，]表示右转
+                current_angle -= angle_deg 
     ax.set_aspect('equal')
     ax.axis('off')
     if savefile:
