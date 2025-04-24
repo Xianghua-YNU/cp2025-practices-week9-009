@@ -12,30 +12,30 @@ def koch_generator(u, level):
     返回:
         numpy.ndarray: 生成的所有点（复数数组）
     """
-    if level == 0:
+    u = np.array([0, 1j]) # 初始竖直线段
+    
+    if level <= 0:
         return u
-    
-    points = np.array([], dtype=np.complex128)
-    for i in range(len(u)-1):
-        start = u[i]
-        end = u[i+1]
-        vec = end - start
         
-        # 科赫曲线的生成规则：将线段分为4段，添加3个新点
-        p0 = start
-        p1 = start + vec / 3
-        p2 = p1 + vec / 3 * np.exp(1j * np.pi/3)
-        p3 = start + 2 * vec / 3
-        p4 = end
+    theta = np.pi/3 # 旋转角度
+    for _ in range(level):
+        new_u = []
+        for i in range(len(u)-1):
+            start = u[i]
+            end = u[i+1]
+            
+            # 生成科赫曲线的四个新线段
+            p1 = start
+            p2 = start + (end - start)/3
+            p3 = p2 + (end - start)/3 * np.exp(1j*theta)
+            p4 = start + 2*(end - start)/3
+            p5 = end
+            
+            new_u.extend([p1, p2, p3, p4, p5])
         
-        segment = np.array([p0, p1, p2, p3, p4])
-        points = np.concatenate((points, segment)) if points.size else segment
+        u = np.array(new_u)
     
-    # 移除重复的端点（除了最后一个）
-    points = np.unique(points)
-    points = np.append(points, end)
-    
-    return koch_generator(points, level-1)
+    return u
 
 def minkowski_generator(u, level):
     """
