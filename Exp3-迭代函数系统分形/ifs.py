@@ -7,7 +7,13 @@ def get_fern_params():
     每个变换包含6个参数(a,b,c,d,e,f)和概率p
     """
     # TODO: 实现巴恩斯利蕨的参数
-    pass
+    params = [
+        [0.00, 0.00, 0.00, 0.16, 0.00, 0.00, 0.01],  # 茎部
+        [0.85, 0.04, -0.04, 0.85, 0.00, 1.60, 0.85], # 主叶
+        [0.20, -0.26, 0.23, 0.22, 0.00, 1.60, 0.07], # 左叶
+        [-0.15, 0.28, 0.26, 0.24, 0.00, 0.44, 0.07] # 右叶
+    ]
+    return params
 
 def get_tree_params():
     """
@@ -15,7 +21,12 @@ def get_tree_params():
     每个变换包含6个参数(a,b,c,d,e,f)和概率p
     """
     # TODO: 实现概率树的参数 
-    pass
+    params = [
+        [0.00, 0.00, 0.00, 0.50, 0.00, 0.00, 0.1],   # 树干
+        [0.42, -0.42, 0.42, 0.42, 0.00, 0.20, 0.45], # 右分支
+        [0.42, 0.42, -0.42, 0.42, 0.00, 0.20, 0.45]  # 左分支
+    ]
+    return params
 
 def apply_transform(point, params):
     """
@@ -25,7 +36,11 @@ def apply_transform(point, params):
     :return: 变换后的新坐标(x',y')
     """
     # TODO: 实现变换公式
-    pass
+    a, b, c, d, e, f, _ = params
+    x, y = point
+    x_new = a * x + b * y + e
+    y_new = c * x + d * y + f
+    return (x_new, y_new)
 
 def run_ifs(ifs_params, num_points=100000, num_skip=100):
     """
@@ -36,7 +51,19 @@ def run_ifs(ifs_params, num_points=100000, num_skip=100):
     :return: 生成的点坐标数组
     """
     # TODO: 实现混沌游戏算法
-    pass
+    points = []
+    x, y = 0.0, 0.0
+    # 提取概率并归一化（确保总和为1）
+    probs = [param[6] for param in ifs_params]
+    probs = np.array(probs) / np.sum(probs)  # 确保概率归一化
+    
+    for _ in range(num_skip + num_points):
+        idx = np.random.choice(len(ifs_params), p=probs)
+        x, y = apply_transform((x, y), ifs_params[idx])
+        if _ >= num_skip:
+            points.append([x, y])
+    
+    return np.array(points)
 
 def plot_ifs(points, title="IFS Fractal"):
     """
@@ -45,7 +72,11 @@ def plot_ifs(points, title="IFS Fractal"):
     :param title: 图像标题
     """
     # TODO: 实现分形绘制
-    pass
+    plt.figure(figsize=(10, 10))
+    plt.scatter(points[:, 0], points[:, 1], s=0.1, c='green', marker='.', alpha=0.6)
+    plt.title(title)
+    plt.axis('off')
+    plt.show()
 
 if __name__ == "__main__":
     # 生成并绘制巴恩斯利蕨
