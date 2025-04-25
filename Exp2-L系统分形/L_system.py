@@ -22,7 +22,7 @@ def apply_rules(axiom, rules, iterations):
         current = ''.join(next_seq)
     return current
 
-def draw_l_system(instructions, angle, step, start_pos=(0,0), start_angle=0, savefile=None):
+def draw_l_system(commands, angle_deg, step, initial_pos=(0, 0), initial_angle=90, tree_mode=False, savefile=None):
     """
     根据L-System指令绘图
     :param instructions: 指令字符串（如"F+F--F+F"）
